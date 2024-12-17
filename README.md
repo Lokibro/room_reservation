@@ -1,6 +1,6 @@
 python 3.9
 
-```
+
 ```bash
 pip install fastapi==0.78.0 "uvicorn[standard]==0.17.6"
 
@@ -15,5 +15,6 @@ alembic init --template async alembic
 alembic revision --autogenerate -m "First migration"
 
 alembic upgrade head
+
 ```
 ```
