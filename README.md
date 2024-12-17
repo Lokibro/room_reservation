@@ -17,4 +17,3 @@ alembic revision --autogenerate -m "First migration"
 alembic upgrade head
 
 ```
-```
