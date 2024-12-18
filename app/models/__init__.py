@@ -1,2 +1,3 @@
-from app.models.meeting_room import MeetingRoom
-from app.models.reservation import Reservation
+from .meeting_room import MeetingRoom
+from .reservation import Reservation
+from .user import User
