@@ -5,11 +5,10 @@ from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
-from app.models.reservation import Reservation
+from app.models import Reservation, User
 
 
 class CRUDReservation(CRUDBase):
-
     async def get_reservations_at_the_same_time(
         self,
         *,
@@ -45,6 +44,16 @@ class CRUDReservation(CRUDBase):
         )
         reservations = reservations.scalars().all()
         return reservations
+
+    async def get_by_user(
+        self,
+        session: AsyncSession,
+        user: User,
+    ):
+        reservations = await session.execute(
+            select(Reservation).where(Reservation.user_id == user.id)
+        )
+        return reservations.scalars().all()
 
 
 reservation_crud = CRUDReservation(Reservation)

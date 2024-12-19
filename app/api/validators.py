@@ -10,7 +10,8 @@ async def check_name_duplicate(room_name: str, session: AsyncSession) -> None:
     room_id = await meeting_room_crud.get_room_id_by_name(room_name, session)
     if room_id is not None:
         raise HTTPException(
-            status_code=422, detail="Переговорка с таким именем уже существует!"
+            status_code=422,
+            detail="Переговорка с таким именем уже существует!",
         )
 
 
@@ -24,7 +25,9 @@ async def check_meeting_room_exists(
 
 
 async def check_reservation_intersections(**kwargs) -> None:
-    reservations = await reservation_crud.get_reservations_at_the_same_time(**kwargs)
+    reservations = await reservation_crud.get_reservations_at_the_same_time(
+        **kwargs,
+    )
     if reservations:
         raise HTTPException(status_code=422, detail=str(reservations))
 
@@ -32,7 +35,10 @@ async def check_reservation_intersections(**kwargs) -> None:
 async def check_reservation_befor_edit(
     reservation_id: int, session: AsyncSession
 ) -> Reservation:
-    reservation = await reservation_crud.get(obj_id=reservation_id, session=session)
+    reservation = await reservation_crud.get(
+        obj_id=reservation_id,
+        session=session,
+    )
     if not reservation:
         raise HTTPException(status_code=404, detail="Бронь не найдена!")
     return reservation

@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 from pydantic import BaseModel, Extra, Field, root_validator, validator
 
 
-FROM_TIME = (datetime.now() + timedelta(minutes=10)).isoformat(timespec="minutes")
+FROM_TIME = (datetime.now() + timedelta(minutes=10)
+             ).isoformat(timespec="minutes")
 TO_TIME = (datetime.now() + timedelta(hours=1)).isoformat(timespec="minutes")
 
 
@@ -16,7 +18,6 @@ class ReservationBase(BaseModel):
 
 
 class ReservationUpdate(ReservationBase):
-
     @validator("from_reserve")
     def check_from_reserve_later_then_now(cls, value):
         if value <= datetime.now():
@@ -41,6 +42,7 @@ class ReservationCreate(ReservationUpdate):
 class ReservationDB(ReservationBase):
     id: int
     meetingroom_id: int
+    user_id: Optional[int]
 
     class Config:
         orm_mode = True

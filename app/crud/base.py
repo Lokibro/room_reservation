@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import Base
+from app.models import User
 
 
 ModelType = TypeVar("ModelType", bound=Base)
@@ -14,7 +15,6 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
-
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
@@ -33,9 +33,14 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_objs.scalars().all()
 
     async def create(
-        self, obj_in: CreateSchemaType, session: AsyncSession
+        self,
+        obj_in: CreateSchemaType,
+        session: AsyncSession,
+        user: Optional[User] = None,
     ) -> ModelType:
         obj_in_data = obj_in.dict()
+        if user is not None:
+            obj_in_data["user_id"] = user.id
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
         await session.commit()
